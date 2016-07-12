@@ -1,8 +1,12 @@
 docker-postfix
 ==============
 
-run postfix with smtp authentication (sasldb) in a docker container.
-TLS and OpenDKIM support are optional.
+Forked from catatnight/docker-postfix.
+
+Contributions welcome.
+
+Run postfix with smtp authentication (sasldb) in a docker container.
+TLS and OpenDKIM support are optional (see below for certs naming schme; specifically supports dokku-letsencrypt naming scheme).
 
 ## Requirement
 + Docker 1.0
@@ -11,7 +15,7 @@ TLS and OpenDKIM support are optional.
 1. Build image
 
 	```bash
-	$ sudo docker pull catatnight/postfix
+	$ sudo docker pull joofow/postfix
 	```
 
 ## Usage
@@ -31,7 +35,7 @@ TLS and OpenDKIM support are optional.
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
 			--name postfix -d catatnight/postfix
 	```
-3. Enable TLS(587): save your SSL certificates ```.key``` and ```.crt``` to  ```/path/to/certs```
+3. Enable TLS(587): save your SSL certificates ```fullchain.pem``` and ```key.pem``` to  ```/path/to/certs```
 
 	```bash
 	$ sudo docker run -p 587:587 \
