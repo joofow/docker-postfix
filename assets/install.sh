@@ -60,8 +60,8 @@ if [[ -n $cert_file &&
       -n "$(find /etc/postfix/certs -iname $cert_file)" &&
       -n "$(find /etc/postfix/certs -iname $key_file)" ]]; then
   # /etc/postfix/main.cf
-  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname $cert_file)
-  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname $key_file)
+  postconf -e smtpd_tls_cert_file=/etc/postfix/certs/$cert_file
+  postconf -e smtpd_tls_key_file=/etc/postfix/certs/$key_file
   chmod 400 /etc/postfix/certs/*.*
   # # /etc/postfix/master.cf
   postconf -M submission/inet="submission   inet   n   -   n   -   -   smtpd"
