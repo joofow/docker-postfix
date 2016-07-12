@@ -54,12 +54,16 @@ chown postfix.sasl /etc/sasldb2
 ############
 # Enable TLS
 ############
-if [[ -n "$(find /etc/postfix/certs -iname *.pem)"]]; then
+
+if [[ -n $cert_file &&
+      -n $key_file &&
+      -n "$(find /etc/postfix/certs -iname $cert_file)" &&
+      -n "$(find /etc/postfix/certs -iname $key_file)" ]]; then
   # /etc/postfix/main.cf
-  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname fullchain.pem)
-  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname key.pem)
+  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname $cert_file)
+  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname $key_file)
   chmod 400 /etc/postfix/certs/*.*
-  # /etc/postfix/master.cf
+  # # /etc/postfix/master.cf
   postconf -M submission/inet="submission   inet   n   -   n   -   -   smtpd"
   postconf -P "submission/inet/syslog_name=postfix/submission"
   postconf -P "submission/inet/smtpd_tls_security_level=encrypt"

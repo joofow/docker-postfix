@@ -6,7 +6,7 @@ Forked from catatnight/docker-postfix.
 Contributions welcome.
 
 Run postfix with smtp authentication (sasldb) in a docker container.
-TLS and OpenDKIM support are optional (see below for certs naming schme; specifically supports dokku-letsencrypt naming scheme).
+TLS and OpenDKIM support are optional (names for SSL certs needs to be passed in as env variables).
 
 ## Requirement
 + Docker 1.0
@@ -23,6 +23,7 @@ TLS and OpenDKIM support are optional (see below for certs naming schme; specifi
 
 	```bash
 	$ sudo docker run -p 25:25 \
+			-h mail.example.com \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
 			--name postfix -d catatnight/postfix
 	# Set multiple user credentials: -e smtp_user=user1:pwd1,user2:pwd2,...,userN:pwdN
@@ -35,11 +36,24 @@ TLS and OpenDKIM support are optional (see below for certs naming schme; specifi
 			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
 			--name postfix -d catatnight/postfix
 	```
-3. Enable TLS(587): save your SSL certificates ```fullchain.pem``` and ```key.pem``` to  ```/path/to/certs```
+3. Enable TLS(587): save your SSL certificates ```example.pem``` and ```example_private_key.pem``` to  ```/path/to/certs```. Make sure the names of the certs are passed in as environment variables when running the container.
 
 	```bash
 	$ sudo docker run -p 587:587 \
+			-h mail.example.com \
 			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e cert_file=example.pem -e key_file=example_private_key.pem \
+			-v /path/to/certs:/etc/postfix/certs \
+			--name postfix -d catatnight/postfix
+	```
+4. You can combine all of the above methods
+
+	```bash
+	$ sudo docker run -p 587:587 \
+			-h mail.example.com \
+			-e maildomain=mail.example.com -e smtp_user=user:pwd \
+			-e cert_file=example.pem -e key_file=example_private_key.pem \
+			-v /path/to/domainkeys:/etc/opendkim/domainkeys \
 			-v /path/to/certs:/etc/postfix/certs \
 			--name postfix -d catatnight/postfix
 	```
