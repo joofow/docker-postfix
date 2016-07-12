@@ -13,7 +13,7 @@ nodaemon=true
 [program:postfix]
 command=/opt/postfix.sh
 
-[program:rsyslog]
+[program:rsyslog] 
 command=/usr/sbin/rsyslogd -n -c3
 EOF
 
@@ -54,10 +54,10 @@ chown postfix.sasl /etc/sasldb2
 ############
 # Enable TLS
 ############
-if [[ -n "$(find /etc/postfix/certs -iname *.crt)" && -n "$(find /etc/postfix/certs -iname *.key)" ]]; then
+if [[ -n "$(find /etc/postfix/certs -iname *.pem)"]]; then
   # /etc/postfix/main.cf
-  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname *.crt)
-  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname *.key)
+  postconf -e smtpd_tls_cert_file=$(find /etc/postfix/certs -iname fullchain.pem)
+  postconf -e smtpd_tls_key_file=$(find /etc/postfix/certs -iname key.pem)
   chmod 400 /etc/postfix/certs/*.*
   # /etc/postfix/master.cf
   postconf -M submission/inet="submission   inet   n   -   n   -   -   smtpd"
